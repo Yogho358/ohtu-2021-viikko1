@@ -6,6 +6,42 @@ class TestVarasto(unittest.TestCase):
     def setUp(self):
         self.varasto = Varasto(10)
 
+    def test_konstruktori_luo_negatiivisen_tilavuuden(self):
+        self.varasto = Varasto(-1)
+        self.assertAlmostEqual(self.varasto.tilavuus, 0)
+
+    def test_konstruktori_luo_negatiivisen_alkusaldon(self):
+        self.varasto = Varasto(10,-1)
+        self.assertAlmostEqual(self.varasto.saldo,0)
+
+    def test_negatiivinen_lisays_ei_lisaa(self):
+        self.varasto.lisaa_varastoon(2)
+        self.varasto.lisaa_varastoon(-1)
+        self.assertAlmostEqual(self.varasto.saldo,2)
+
+    def test_varasto_ei_ylibookkaudu(self):
+        self.varasto.lisaa_varastoon(18)
+        self.assertAlmostEqual(self.varasto.saldo,10)
+
+    def test_ei_voi_ottaa_negatiivista(self):
+        self.varasto.lisaa_varastoon(8)
+        saatu_maara = self.varasto.ota_varastosta(-1)
+        self.assertAlmostEqual(saatu_maara,0)
+
+    def test_liikaa_ottaminen_palauttaa_saldon(self):
+        self.varasto.lisaa_varastoon(8)
+        saatu_maara = self.varasto.ota_varastosta(10)
+        self.assertAlmostEqual(saatu_maara,8)
+
+    def test_liikaa_ottaminen_nollaa_saldon(self):
+        self.varasto.lisaa_varastoon(8)
+        self.varasto.ota_varastosta(10)
+        self.assertAlmostEqual(self.varasto.saldo,0)
+
+    def test_str_toimii(self):
+        self.varasto.lisaa_varastoon(8)
+        self.assertEqual(f"{self.varasto}","saldo = 8, vielä tilaa 2")
+
     def test_konstruktori_luo_tyhjan_varaston(self):
         # https://docs.python.org/3/library/unittest.html#unittest.TestCase.assertAlmostEqual
         self.assertAlmostEqual(self.varasto.saldo, 0)
